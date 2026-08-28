@@ -1,4 +1,4 @@
-# EasyTunnel v2.0
+# EdgeProxy v2.0
 
 基于 Cloudflare Workers 的代理隧道，支持 VMess/Trojan/Shadowsocks 协议。
 
@@ -16,7 +16,7 @@
 ## 项目结构
 
 ```
-edgetunnel/
+EdgeProxy/
 ├── worker/          # CF Workers 后端 (TypeScript)
 │   └── src/
 │       ├── index.ts        # 入口

@@ -2,7 +2,7 @@
   <div class="min-h-screen flex items-center justify-center bg-gray-950">
     <div class="w-full max-w-md p-8">
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-white mb-2">🚀 EasyTunnel</h1>
+        <h1 class="text-3xl font-bold text-white mb-2">🚀 EdgeProxy</h1>
         <p class="text-gray-400">CF Workers 代理管理面板</p>
       </div>
 

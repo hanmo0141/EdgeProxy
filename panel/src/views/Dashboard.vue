@@ -4,7 +4,7 @@
     <nav class="bg-gray-900 border-b border-gray-800 px-6 py-3">
       <div class="flex items-center justify-between max-w-7xl mx-auto">
         <div class="flex items-center gap-3">
-          <span class="text-xl font-bold text-white">🚀 EasyTunnel</span>
+          <span class="text-xl font-bold text-white">🚀 EdgeProxy</span>
           <span class="text-xs bg-blue-600 px-2 py-0.5 rounded">v2.0</span>
         </div>
         <div class="flex items-center gap-4">

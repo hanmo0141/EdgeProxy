@@ -3,7 +3,7 @@
     <nav class="bg-gray-900 border-b border-gray-800 px-6 py-3">
       <div class="flex items-center justify-between max-w-7xl mx-auto">
         <div class="flex items-center gap-3">
-          <span class="text-xl font-bold text-white">🚀 EasyTunnel</span>
+          <span class="text-xl font-bold text-white">🚀 EdgeProxy</span>
         </div>
         <div class="flex items-center gap-4">
           <router-link to="/" class="text-gray-300 hover:text-white transition">仪表盘</router-link>
