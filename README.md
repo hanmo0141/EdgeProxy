@@ -83,7 +83,7 @@ EdgeProxy 是一个代理工具，可以帮助你：
 
 1. 部署完成后，点击 **Edit code**
 2. 删除编辑器里所有默认代码
-3. 打开这个链接：https://raw.githubusercontent.com/18139888251hm-cpu/EdgeProxy/main/_worker.js
+3. 打开这个链接：https://raw.githubusercontent.com/hanmo0141/EdgeProxy/main/_worker.js
 4. 全选复制页面里的代码（Ctrl+A → Ctrl+C）
 5. 粘贴到 Cloudflare 编辑器里（Ctrl+V）
 6. 点击右上角 **Save and Deploy**
