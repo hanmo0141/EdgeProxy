@@ -122,7 +122,14 @@ export default {
 					// CF Usage query
 					else if (caseSensitivePath === 'admin/getCloudflareUsage') {
 						try {
-							const usageJSON = await getCloudflareUsage(url.searchParams.get('Email'), url.searchParams.get('GlobalAPIKey'), url.searchParams.get('AccountID'), url.searchParams.get('APIToken'));
+							let Email, GlobalAPIKey, AccountID, APIToken;
+							if (request.method === 'POST') {
+								const body = await request.json();
+								Email = body.Email; GlobalAPIKey = body.GlobalAPIKey; AccountID = body.AccountID; APIToken = body.APIToken;
+							} else {
+								Email = url.searchParams.get('Email'); GlobalAPIKey = url.searchParams.get('GlobalAPIKey'); AccountID = url.searchParams.get('AccountID'); APIToken = url.searchParams.get('APIToken');
+							}
+							const usageJSON = await getCloudflareUsage(Email, GlobalAPIKey, AccountID, APIToken);
 							return new Response(JSON.stringify(usageJSON, null, 2), { status: 200, headers: { 'Content-Type': 'application/json' } });
 						} catch (err) {
 							return new Response(JSON.stringify({ msg: 'Query failed: ' + err.message, error: err.message }, null, 2), { status: 500, headers: { 'Content-Type': 'application/json;charset=utf-8' } });
@@ -208,8 +215,8 @@ export default {
 						return new Response(JSON.stringify(checkResult, null, 2), { status: 200, headers: { 'Content-Type': 'application/json;charset=utf-8' } });
 					}
 					cachedConfig = await readConfig(env, host, userID, UA);
-					// Reset config
-					if (accessPath === 'admin/init') {
+					// Reset config (POST only to prevent CSRF via img/link tags)
+					if (accessPath === 'admin/init' && request.method === 'POST') {
 						try {
 							cachedConfig = await readConfig(env, host, userID, UA, true);
 							ctx.waitUntil(logRequest(env, request, clientIP, 'Init_Config', cachedConfig));
