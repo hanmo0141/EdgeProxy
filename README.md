@@ -67,78 +67,60 @@ EdgeProxy 是一个代理工具，可以帮助你：
 
 ---
 
-## 第二步：部署 Worker 后端
+## 第二步：部署 Worker 后端（超简单！）
 
-### 2.1 克隆代码到电脑
+**不需要安装任何软件，直接在网页上操作！**
 
-打开 **命令提示符**（CMD）或 **PowerShell**，输入以下命令：
+### 2.1 打开 Cloudflare Workers
 
-```bash
-# 克隆代码
-git clone https://github.com/18139888251hm-cpu/EdgeProxy.git
+1. 登录 https://dash.cloudflare.com
+2. 左侧菜单点击 **Workers & Pages**
+3. 点击 **Create application**
+4. 选择 **Create Worker**
+5. 随便起个名字（比如 `edgeproxy`），点击 **Deploy**
 
-# 进入项目目录
-cd EdgeProxy/worker
-```
+### 2.2 粘贴代码
 
-### 2.2 安装依赖
+1. 部署完成后，点击 **Edit code**
+2. 删除编辑器里所有默认代码
+3. 打开这个链接：https://raw.githubusercontent.com/18139888251hm-cpu/EdgeProxy/main/_worker.js
+4. 全选复制页面里的代码（Ctrl+A → Ctrl+C）
+5. 粘贴到 Cloudflare 编辑器里（Ctrl+V）
+6. 点击右上角 **Save and Deploy**
 
-```bash
-npm install
-```
+### 2.3 设置环境变量
 
-等待安装完成（可能需要 1-2 分钟）。
+1. 回到 Worker 详情页
+2. 点击 **Settings** → **Variables**
+3. 添加以下变量：
 
-### 2.3 登录 Cloudflare
+| Name | Value | 类型 |
+|------|-------|------|
+| `ADMIN` | 你的管理员密码 | **Encrypt** |
 
-```bash
-npx wrangler login
-```
-
-浏览器会自动打开，点击 **Allow** 授权。
+4. 点击 **Save**
 
 ### 2.4 创建 KV 存储
 
-KV 是 Cloudflare 提供的键值存储，用来保存你的配置。
+1. 在 Worker 详情页，点击 **Settings** → **Variables**
+2. 滚动到 **KV Namespace Bindings**
+3. 点击 **Add binding**
+4. Variable name 填 `KV`
+5. KV namespace 选择 **Create a new namespace**
+6. 名字随便填（比如 `edgeproxy-kv`）
+7. 点击 **Add**
+8. 点击 **Save**
 
-```bash
-npx wrangler kv:namespace create KV
-```
+### 2.5 绑定自定义域名（可选）
 
-执行后会显示类似这样的内容：
+1. 在 Worker 详情页，点击 **Settings** → **Triggers**
+2. 滚动到 **Custom Domains**
+3. 点击 **Add**，输入你的域名
+4. 按提示配置 DNS
 
-```
-Binding "KV" has been created with id: "xxxxxxxxxxxxxxxxxxxxxxxx"
-```
+**部署完成！** 🎉
 
-**记下这个 ID**（一串字母数字），后面要用。
-
-### 2.5 修改配置
-
-用记事本打开 `wrangler.toml` 文件，把刚才的 ID 填进去：
-
-```toml
-[[kv_namespaces]]
-binding = "KV"
-id = "刚才记下的ID"
-```
-
-保存文件。
-
-### 2.6 部署到 Cloudflare
-
-```bash
-npx wrangler deploy
-```
-
-等待部署完成，会显示类似：
-
-```
-Published EdgeProxy (x.x.x seconds)
-https://edgeproxy.your-subdomain.workers.dev
-```
-
-**复制这个地址**，这就是你的代理服务器地址！✅
+你的 Worker 地址是：`https://edgeproxy.你的用户名.workers.dev`
 
 ---
 
