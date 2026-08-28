@@ -7,7 +7,7 @@ export interface Config {
   UUID: string;
   HOSTS: string[];
   PATH: string;
-  协议类型: string; // 'vmess' | 'trojan' | 'ss'
+  协议类型: string; // 'vless' | 'vmess' | 'trojan' | 'ss'
   传输协议: string; // 'ws' | 'grpc' | 'xhttp'
   TLS分片: string;
   Fingerprint: string;

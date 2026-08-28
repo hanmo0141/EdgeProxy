@@ -5,6 +5,7 @@ import { Config, ProxyContext } from '../config/types';
 import { toUint8Array, concat } from '../utils/binary';
 import { base64UrlDecode } from '../utils/encoding';
 import { parseVMessRequest, isVMessPacket } from '../protocols/vmess';
+import { parseVLESSRequest, isVLESSPacket } from '../protocols/vless';
 import { parseTrojanRequest, isTrojanPacket } from '../protocols/trojan';
 import { connectToTarget, createTCPConnector, relayStreams } from '../core/router';
 import { log } from '../utils/helpers';
@@ -88,31 +89,16 @@ export async function handleWebSocket(
     const MAX_QUEUE = 16 * 1024 * 1024;
 
     const processFirstPacket = async (data: Uint8Array) => {
-      // 检测协议
-      if (isTrojanPacket(data)) {
-        const result = parseTrojanRequest(data, uuid);
+      // 检测协议（VLESS/VMess 和 Trojan 使用相同的字节模式，VLESS 优先检测）
+      if (isVLESSPacket(data, uuid) || isVMessPacket(data, uuid)) {
+        // VLESS 和 VMess 使用相同的格式，根据配置选择协议
+        const isVless = config.协议类型 === 'vless';
+        const result = isVless
+          ? parseVLESSRequest(data, uuid)
+          : parseVMessRequest(data, uuid);
         if ('hasError' in result) throw new Error(result.message);
-        protocolDetected = 'trojan';
-        log(`[WS] Trojan: ${result.hostname}:${result.port} UDP=${result.isUDP}`);
-        isUDP = result.isUDP;
-
-        if (result.isUDP) {
-          // UDP 处理（简化为 DNS 转发）
-          await handleDNSForward(result.rawData, serverSock, config, request);
-          return;
-        }
-
-        remoteSocket = await connectToTarget(
-          result.hostname, result.port, result.rawData,
-          request, proxyCtx, {}, uuid, true, data
-        );
-        const respHeader = new Uint8Array([0x05, 0x00]);
-        const { outBytes } = await relayStreams(remoteSocket, serverSock, respHeader);
-      } else if (isVMessPacket(data, uuid)) {
-        const result = parseVMessRequest(data, uuid);
-        if ('hasError' in result) throw new Error(result.message);
-        protocolDetected = 'vmess';
-        log(`[WS] VMess: ${result.hostname}:${result.port} UDP=${result.isUDP} v=${result.version}`);
+        protocolDetected = isVless ? 'vless' : 'vmess';
+        log(`[WS] ${isVless ? 'VLESS' : 'VMess'}: ${result.hostname}:${result.port} UDP=${result.isUDP} v=${result.version}`);
         isUDP = result.isUDP;
 
         if (result.isUDP) {
@@ -125,6 +111,24 @@ export async function handleWebSocket(
           request, proxyCtx, {}, uuid
         );
         const { outBytes } = await relayStreams(remoteSocket, serverSock, result.respHeader);
+      } else if (isTrojanPacket(data)) {
+        const result = parseTrojanRequest(data, uuid);
+        if ('hasError' in result) throw new Error(result.message);
+        protocolDetected = 'trojan';
+        log(`[WS] Trojan: ${result.hostname}:${result.port} UDP=${result.isUDP}`);
+        isUDP = result.isUDP;
+
+        if (result.isUDP) {
+          await handleDNSForward(result.rawData, serverSock, config, request);
+          return;
+        }
+
+        remoteSocket = await connectToTarget(
+          result.hostname, result.port, result.rawData,
+          request, proxyCtx, {}, uuid, true, data
+        );
+        const respHeader = new Uint8Array([0x05, 0x00]);
+        const { outBytes } = await relayStreams(remoteSocket, serverSock, respHeader);
       } else {
         throw new Error('无法识别的协议');
       }

@@ -131,6 +131,38 @@ export async function handleAdmin(
     return jsonResponse(await getTGConfig(env));
   }
 
+  // TG 发送消息
+  if (apiPath === 'tg/send') {
+    if (method === 'POST') {
+      const { message } = await request.json() as { message: string };
+      const tgConfig = await getTGConfig(env);
+      if (tgConfig.BotToken && tgConfig.ChatID) {
+        try {
+          await fetch(`https://api.telegram.org/bot${tgConfig.BotToken}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: tgConfig.ChatID, text: message, parse_mode: 'HTML' }),
+          });
+          return jsonResponse({ success: true });
+        } catch (err: any) {
+          return jsonResponse({ error: err.message }, 500);
+        }
+      }
+      return jsonResponse({ error: 'Telegram 未配置' }, 400);
+    }
+  }
+
+  // CF 用量查询
+  if (apiPath === 'cf/usage') {
+    const cfConfig = await getCFConfig(env);
+    try {
+      const usage = await getCloudflareUsage(cfConfig);
+      return jsonResponse(usage);
+    } catch (err: any) {
+      return jsonResponse({ error: err.message }, 500);
+    }
+  }
+
   // 自定义优选 IP
   if (apiPath === 'add.txt') {
     if (method === 'POST') {
@@ -178,4 +210,67 @@ interface Env {
   UUID?: string;
   uuid?: string;
   [key: string]: unknown;
+}
+
+/** 查询 Cloudflare Workers 用量 */
+async function getCloudflareUsage(cfConfig: Record<string, string | null>): Promise<any> {
+  const { Email, GlobalAPIKey, AccountID, APIToken, UsageAPI } = cfConfig;
+
+  // 方式1: 使用 UsageAPI
+  if (UsageAPI) {
+    const resp = await fetch(UsageAPI);
+    if (resp.ok) return await resp.json();
+  }
+
+  // 方式2: 使用 Global API Key
+  if (Email && GlobalAPIKey && AccountID) {
+    const auth = btoa(`${Email}:${GlobalAPIKey}`);
+    const resp = await fetch(`https://api.cloudflare.com/client/v4/accounts/${AccountID}/workers/services`, {
+      headers: { 'Authorization': `Basic ${auth}` }
+    });
+    if (resp.ok) {
+      const data = await resp.json() as any;
+      return {
+        success: true,
+        pages: data.result?.length || 0,
+        workers: data.result?.length || 0,
+        max: 100000,
+      };
+    }
+  }
+
+  // 方式3: 使用 API Token
+  if (APIToken && AccountID) {
+    const resp = await fetch(`https://api.cloudflare.com/client/v4/accounts/${AccountID}/workers/services`, {
+      headers: { 'Authorization': `Bearer ${APIToken}` }
+    });
+    if (resp.ok) {
+      const data = await resp.json() as any;
+      return {
+        success: true,
+        pages: data.result?.length || 0,
+        workers: data.result?.length || 0,
+        max: 100000,
+      };
+    }
+  }
+
+  return { success: false, message: '未配置 Cloudflare API 凭据' };
+}
+
+/** 发送 Telegram 通知 */
+export async function sendTelegramNotification(env: Env, message: string): Promise<void> {
+  if (!env.KV) return;
+  const tgJson = await env.KV.get('tg.json');
+  if (!tgJson) return;
+  const { BotToken, ChatID } = JSON.parse(tgJson);
+  if (!BotToken || !ChatID) return;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${BotToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: ChatID, text: message, parse_mode: 'HTML' }),
+    });
+  } catch {}
 }
