@@ -788,7 +788,8 @@
 					const authCheckController = new AbortController();
 					const authTimeoutId = setTimeout(() => authCheckController.abort(), 5000);
 
-					const authResponse = await fetch('/admin/config.json?_t=' + Date.now(), {
+					const BASE_PATH = window.location.pathname.replace(/\/login\/?$/, '').replace(/\/$/, '') || '';
+					const authResponse = await fetch(BASE_PATH + '/admin/config.json?_t=' + Date.now(), {
 						method: 'HEAD',
 						redirect: 'manual',
 						signal: authCheckController.signal,
@@ -799,7 +800,7 @@
 					// 200 = Worker 端鉴权通过（cookie 有效），跳转 /admin
 					if (authResponse.ok) {
 						sessionStorage.setItem(REDIRECT_KEY, '1');
-						window.location.replace('/admin');
+						window.location.replace(BASE_PATH + '/admin');
 						return;
 					}
 				} catch (_) {
@@ -956,7 +957,7 @@
 			sessionStorage.removeItem('_auth_auto_redirect');
 
 			try {
-				const response = await fetch('/login', {
+				const response = await fetch(BASE_PATH + '/login', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded',
@@ -974,7 +975,7 @@
 				// 使用 redirect: 'manual' 拦截 302，直接跳转 /admin。
 				if (response.type === 'opaqueredirect') {
 					// Worker 返回了重定向 = auth cookie 仍然有效，直接进 /admin
-					window.location.replace('/admin');
+					window.location.replace(BASE_PATH + '/admin');
 					return;
 				}
 
@@ -986,7 +987,7 @@
 						const data = await response.json();
 						if (data.success) {
 							// 登录成功，使用 replace 避免留下 /login 在浏览器历史中
-							window.location.replace('/admin');
+							window.location.replace(BASE_PATH + '/admin');
 						}
 					} else {
 						// 返回的是HTML，说明密码错误

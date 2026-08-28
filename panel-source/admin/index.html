@@ -18923,10 +18923,13 @@
 			textarea.dispatchEvent(new Event('input', { bubbles: true }));
 		}
 
+		// 计算正确的基础路径（支持子目录部署）
+		const BASE_PATH = window.location.pathname.replace(/\/admin\/?.*$/, '').replace(/\/$/, '') || '';
+
 		async function loadConfig() {
 			try {
 				// 禁用 Rocket Loader 对该请求的影响
-				const response = await fetch('/admin/config.json?_t=' + Date.now(), {
+				const response = await fetch(BASE_PATH + '/admin/config.json?_t=' + Date.now(), {
 					method: 'GET',
 					headers: {
 						'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -19211,7 +19214,7 @@
 			if (textarea._refreshLineEditor) textarea._refreshLineEditor();
 
 			try {
-				const response = await fetch('/admin/ADD.txt?_t=' + Date.now(), {
+				const response = await fetch(BASE_PATH + '/admin/ADD.txt?_t=' + Date.now(), {
 					headers: {
 						'Cache-Control': 'no-cache, no-store, must-revalidate',
 						'Pragma': 'no-cache',
@@ -20544,7 +20547,7 @@
 			if (mode === 'custom') {
 				const customIPs = document.getElementById('customIPs').value;
 				try {
-					await fetch('/admin/ADD.txt', { method: 'POST', body: customIPs });
+					await fetch(BASE_PATH + '/admin/ADD.txt', { method: 'POST', body: customIPs });
 				} catch (error) {
 					showToast('保存自定义IP失败', 'error');
 					return;
@@ -20922,7 +20925,7 @@
 
 		async function saveConfigToServer(section) {
 			try {
-				const response = await fetch('/admin/config.json', {
+				const response = await fetch(BASE_PATH + '/admin/config.json', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -21115,7 +21118,7 @@
 
 		async function confirmReset() {
 			try {
-				const response = await fetch('/admin/init');
+				const response = await fetch(BASE_PATH + '/admin/init');
 				if (!response.ok) throw new Error('重置失败');
 
 				closeResetModal();
@@ -21131,7 +21134,7 @@
 		}
 
 		function logout() {
-			window.location.href = '/logout';
+			window.location.href = BASE_PATH + '/logout';
 		}
 
 		const USER_MODE_TRANSITION_DURATION = 1450;
@@ -22363,7 +22366,7 @@
 		// 加载最近8条日志
 		async function loadLogs() {
 			try {
-				const response = await fetch('/admin/log.json?_t=' + Date.now(), {
+				const response = await fetch(BASE_PATH + '/admin/log.json?_t=' + Date.now(), {
 					headers: {
 						'Cache-Control': 'no-cache, no-store, must-revalidate',
 						'Pragma': 'no-cache',
@@ -22422,7 +22425,7 @@
 		// 显示全部日志
 		async function showAllLogs() {
 			try {
-				const response = await fetch('/admin/log.json?_t=' + Date.now(), {
+				const response = await fetch(BASE_PATH + '/admin/log.json?_t=' + Date.now(), {
 					headers: {
 						'Cache-Control': 'no-cache, no-store, must-revalidate',
 						'Pragma': 'no-cache',
@@ -24172,7 +24175,7 @@
 				confirmBtn.textContent = '保存中...';
 
 				// 提交到后端
-				const response = await fetch('/admin/tg.json', {
+				const response = await fetch(BASE_PATH + '/admin/tg.json', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -24353,7 +24356,7 @@
 						queryParams.append('APIToken', apiToken);
 					}
 
-					response = await fetch('/admin/getCloudflareUsage?' + queryParams.toString());
+					response = await fetch(BASE_PATH + '/admin/getCloudflareUsage?' + queryParams.toString());
 				}
 
 				if (!response.ok) {
@@ -24440,7 +24443,7 @@
 				}
 
 				// 提交到后端
-				const response = await fetch('/admin/cf.json', {
+				const response = await fetch(BASE_PATH + '/admin/cf.json', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -24477,7 +24480,7 @@
 				currentConfig.TG.启用 = document.getElementById('telegramEnabled').checked;
 
 				// 提交到服务器，但整个 currentConfig
-				const response = await fetch('/admin/config.json', {
+				const response = await fetch(BASE_PATH + '/admin/config.json', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(currentConfig)
@@ -24507,7 +24510,7 @@
 
 		async function confirmClearTelegramConfig() {
 			try {
-				const response = await fetch('/admin/tg.json', {
+				const response = await fetch(BASE_PATH + '/admin/tg.json', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ init: true })
@@ -24542,7 +24545,7 @@
 
 		async function confirmClearCloudflareConfig() {
 			try {
-				const response = await fetch('/admin/cf.json', {
+				const response = await fetch(BASE_PATH + '/admin/cf.json', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ init: true })
