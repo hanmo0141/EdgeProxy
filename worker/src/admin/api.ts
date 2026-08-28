@@ -7,7 +7,7 @@ import { verifyAuth, generateAuthCookie, isValidUUID, verifyVersionUUID } from '
 import { md5 } from '../utils/crypto';
 import { log } from '../utils/helpers';
 
-const PAGES_URL = 'https://edt-pages.github.io';
+const PAGES_URL = 'https://hanmo0141.github.io/EdgeProxy';
 
 export async function handleAdmin(
   request: Request,

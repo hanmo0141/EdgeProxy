@@ -1741,7 +1741,7 @@ function verifyVersionUUID(requestUUID, targetUUID) {
 
 // --- api.ts ---
 
-const PAGES_URL = 'https://edt-pages.github.io';
+const PAGES_URL = 'https://hanmo0141.github.io/EdgeProxy';
 
 function jsonResponse(data, status) {
   if (!status) status = 200;
