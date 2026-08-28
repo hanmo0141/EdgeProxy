@@ -31,7 +31,7 @@
       </form>
 
       <p class="text-center text-gray-600 text-xs mt-6">
-        Powered by EasyTunnel v2.0
+        Powered by EdgeProxy v2.0
       </p>
     </div>
   </div>
