@@ -1971,7 +1971,7 @@ async function readConfig(env, hostname, userID, UA = "Mozilla/5.0", reset = fal
 		ech: false, echConfig: { dns: Ali_DoH, sni: echSNI },
 		ss: { method: "aes-128-gcm", tls: true },
 		fingerprint: "chrome",
-		bestSub: { local: true, localIPs: { randomIP: true, randomCount: 16, specificPort: -1 }, sub: null, subName: "edgetunnel", subUpdateTime: 3, token: await doubleMD5(hostname + userID) },
+		bestSub: { local: true, localIPs: { randomIP: true, randomCount: 16, specificPort: -1 }, sub: null, subName: "ehdbdg", subUpdateTime: 3, token: await doubleMD5(hostname + userID) },
 		subConverter: { subAPI: `https://SUBAPI.${FEATURE_CODES[1]}ssss.net`, subConfig: `https://raw.githubusercontent.com/${FEATURE_CODES[1]}/ACL4SSR/refs/heads/main/Clash/config/ACL4SSR_Online_Mini_MultiMode_CF.ini`, subEmoji: false, subList: false, udp: false, xudp: false, tls13: false, appendType: false, sort: false },
 		proxy: { [fp]: "auto", socks5: { enabled: null, global: false, account: '', whitelist: socks5Whitelist },
 			pathTemplates: { [fp]: "proxyip=" + placeholder, socks5: { global: "socks5://" + placeholder, standard: "socks5=" + placeholder }, http: { global: "http://" + placeholder, standard: "http=" + placeholder }, https: { global: "https://" + placeholder, standard: "https=" + placeholder }, turn: { global: "turn://" + placeholder, standard: "turn=" + placeholder }, sstp: { global: "sstp://" + placeholder, standard: "sstp=" + placeholder } } },
@@ -2072,7 +2072,7 @@ async function getBestSubGenData(host) {
 	if (!/^https?:\/\//i.test(fmt)) fmt = `https://${fmt}`;
 	try { new URL(fmt); fmt = new URL(fmt).origin; } catch (e) { ips.push(`127.0.0.1:1234#${host} Error: ${e.message}`); return [ips, others]; }
 	try {
-		const resp = await fetch(`${fmt}/sub?host=example.com&uuid=00000000-0000-4000-8000-000000000000`, { headers: { 'User-Agent': `v2rayN/edgetunnel (https://github.com/${FEATURE_CODES[1]}/edgetunnel)` } });
+		const resp = await fetch(`${fmt}/sub?host=example.com&uuid=00000000-0000-4000-8000-000000000000`, { headers: { 'User-Agent': `v2rayN/ehdbdg (https://github.com/${FEATURE_CODES[1]}/ehdbdg)` } });
 		if (!resp.ok) { ips.push(`127.0.0.1:1234#${host} Error: ${resp.statusText}`); return [ips, others]; }
 		const content = atob(await resp.text());
 		const lines = content.includes('\r\n') ? content.split('\r\n') : content.split('\n');

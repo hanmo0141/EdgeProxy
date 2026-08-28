@@ -1,4 +1,4 @@
-# 🚀 EdgeProxy v2.0
+# 🚀 ehdbdg v2.0
 
 一个基于 **Cloudflare Workers** 的免费代理隧道工具。  
 你不需要购买服务器，只需要一个 Cloudflare 账号就能搭建自己的代理节点。
@@ -21,7 +21,7 @@
 
 ## 这是什么？
 
-EdgeProxy 是一个代理工具，可以帮助你：
+ehdbdg 是一个代理工具，可以帮助你：
 
 - 🔒 **保护隐私**：加密你的网络流量
 - 🌐 **访问全球网站**：突破网络限制
@@ -33,7 +33,7 @@ EdgeProxy 是一个代理工具，可以帮助你：
 ```
 你的设备 → Cloudflare 节点（全球） → 目标网站
      ↑              ↑                    ↑
-  客户端 APP     EdgeProxy           你想访问的网站
+  客户端 APP     ehdbdg           你想访问的网站
 ```
 
 ---
@@ -83,7 +83,7 @@ EdgeProxy 是一个代理工具，可以帮助你：
 
 1. 部署完成后，点击 **Edit code**
 2. 删除编辑器里所有默认代码
-3. 打开这个链接：https://raw.githubusercontent.com/hanmo0141/EdgeProxy/main/_worker.js
+3. 打开这个链接：https://raw.githubusercontent.com/hanmo0141/ehdbdg/main/_worker.js
 4. 全选复制页面里的代码（Ctrl+A → Ctrl+C）
 5. 粘贴到 Cloudflare 编辑器里（Ctrl+V）
 6. 点击右上角 **Save and Deploy**
@@ -165,7 +165,7 @@ git push -f origin gh-pages
 3. 左侧找到 **Pages**
 4. Source 选择 **gh-pages** 分支
 5. 点击 **Save**
-6. 等待几分钟，访问 `https://你的用户名.github.io/EdgeProxy/`
+6. 等待几分钟，访问 `https://你的用户名.github.io/ehdbdg/`
 
 ---
 
