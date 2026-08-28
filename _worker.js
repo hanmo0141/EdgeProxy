@@ -1,7 +1,7 @@
 const VERSION = '2026-08-29 12:00:00';
 let cachedConfig, cachedSocks5Whitelist = null, debugLogEnabled = false;
 let socks5Whitelist = ['*tapecontent.net', '*cloudatacdn.com', '*loadshare.org', '*cdn-centaurus.com', 'scholar.google.com'];
-const PAGES_URL = 'https://hanmo0141.github.io/EdgeProxy';
+const PAGES_URL = 'https://hanmo0141.github.io/EdgeProxy-Pages';
 const WS_MAX_EARLY_BYTES = 8 * 1024, WS_MAX_EARLY_HEADER_LEN = Math.ceil(WS_MAX_EARLY_BYTES * 4 / 3) + 4;
 const UPSTREAM_BUNDLE_TARGET = 20 * 1024, UPSTREAM_QUEUE_MAX_BYTES = 16 * 1024 * 1024, UPSTREAM_QUEUE_MAX_ENTRIES = 4096;
 const DOWNSTREAM_GRAIN_BYTES = 32 * 1024, DOWNSTREAM_GRAIN_TAIL = 512, DOWNSTREAM_GRAIN_LOW_WATER = Math.max(4096, DOWNSTREAM_GRAIN_TAIL * 12), DOWNSTREAM_GRAIN_MAX_WAIT = 4;
